@@ -74,13 +74,13 @@
 
 (defun diminish-buffer--enable ()
   "Enable `diminish-buffer'."
-  (advice-add 'buffer-menu :after 'diminish-buffer--buffer-menu--advice-after)
-  (advice-add 'tabulated-list-revert :after 'diminish-buffer--tabulated-list-revert--advice-after))
+  (advice-add 'buffer-menu :after #'diminish-buffer--buffer-menu--advice-after)
+  (advice-add 'tabulated-list-revert :after #'diminish-buffer--tabulated-list-revert--advice-after))
 
 (defun diminish-buffer--disable ()
   "Disable `diminish-buffer'."
-  (advice-remove 'buffer-menu 'diminish-buffer--buffer-menu--advice-after)
-  (advice-remove 'tabulated-list-revert 'diminish-buffer--tabulated-list-revert--advice-after))
+  (advice-remove 'buffer-menu #'diminish-buffer--buffer-menu--advice-after)
+  (advice-remove 'tabulated-list-revert #'diminish-buffer--tabulated-list-revert--advice-after))
 
 ;;;###autoload
 (define-minor-mode diminish-buffer-mode
