@@ -63,6 +63,14 @@
               (tabulated-list-delete-entry)
             (forward-line 1)))))))
 
+(defun diminish-buffer--refresh-buffer-menu ()
+  "Refresh buffer menu at time when enabled/disabled."
+  (save-window-excursion
+    (let ((inhibit-message t)
+          (message-log-max nil))
+      (buffer-menu))
+    (bury-buffer)))
+
 (defun diminish-buffer--buffer-menu--advice-after (&rest _)
   "Advice after execute `buffer-menu' command."
   (diminish-buffer-clean))
@@ -75,12 +83,14 @@
 (defun diminish-buffer--enable ()
   "Enable `diminish-buffer'."
   (advice-add 'buffer-menu :after #'diminish-buffer--buffer-menu--advice-after)
-  (advice-add 'tabulated-list-revert :after #'diminish-buffer--tabulated-list-revert--advice-after))
+  (advice-add 'tabulated-list-revert :after #'diminish-buffer--tabulated-list-revert--advice-after)
+  (diminish-buffer--refresh-buffer-menu))
 
 (defun diminish-buffer--disable ()
   "Disable `diminish-buffer'."
   (advice-remove 'buffer-menu #'diminish-buffer--buffer-menu--advice-after)
-  (advice-remove 'tabulated-list-revert #'diminish-buffer--tabulated-list-revert--advice-after))
+  (advice-remove 'tabulated-list-revert #'diminish-buffer--tabulated-list-revert--advice-after)
+  (diminish-buffer--refresh-buffer-menu))
 
 ;;;###autoload
 (define-minor-mode diminish-buffer-mode
