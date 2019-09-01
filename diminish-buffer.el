@@ -6,7 +6,7 @@
 ;; Author: Shen, Jen-Chieh <jcs090218@gmail.com>
 ;; Description: Diminished buffers from being shown in buffer menu.
 ;; Keyword: diminish hide buffer menu
-;; Version: 0.0.2
+;; Version: 0.0.3
 ;; Package-Requires: ((emacs "24.4"))
 ;; URL: https://github.com/jcs090218/diminish-buffer
 
