@@ -1,10 +1,10 @@
-;;; diminish-buffer.el --- Diminished buffers from being shown in buffer menu.  -*- lexical-binding: t; -*-
+;;; diminish-buffer.el --- Diminish (hide) buffers from buffer-menu.  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019  Shen, Jen-Chieh
 ;; Created date 2019-08-31 00:02:54
 
 ;; Author: Shen, Jen-Chieh <jcs090218@gmail.com>
-;; Description: Diminished buffers from being shown in buffer menu.
+;; Description: Diminish (hide) buffers from buffer-menu.
 ;; Keyword: diminish hide buffer menu
 ;; Version: 0.0.3
 ;; Package-Requires: ((emacs "24.4"))
@@ -27,14 +27,14 @@
 
 ;;; Commentary:
 ;;
-;; Diminished buffers from being shown in buffer menu.
+;; Diminish (hide) buffers from buffer-menu.
 ;;
 
 ;;; Code:
 
 
 (defgroup diminish-buffer nil
-  "Diminished buffers from being shown in buffer menu."
+  "Diminish (hide) buffers from buffer-menu."
   :prefix "diminish-buffer-"
   :group 'convenience
   :link '(url-link :tag "Repository" "https://github.com/jcs090218/diminish-buffer"))
