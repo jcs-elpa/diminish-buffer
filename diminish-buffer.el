@@ -38,7 +38,7 @@
   :group 'convenience
   :link '(url-link :tag "Repository" "https://github.com/jcs090218/diminish-buffer"))
 
-(defcustom diminish-buffer-list '("*helm")
+(defcustom diminish-buffer-list '("[*]helm")
   "List of buffer that you want to hide in the buffer."
   :type 'list
   :group 'diminish-buffer)
