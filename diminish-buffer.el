@@ -54,6 +54,7 @@
   (when (get-buffer "*Buffer List*")
     (with-current-buffer "*Buffer List*"
       (save-excursion
+        (goto-char (point-min))
         (while (< (line-number-at-pos) (line-number-at-pos (point-max)))
           (let ((buf-name (elt (tabulated-list-get-entry) 3)))
             (if (and (stringp buf-name)
@@ -80,7 +81,8 @@
   "Enable `diminish-buffer'."
   (advice-add 'buffer-menu :after #'diminish-buffer--buffer-menu--advice-after)
   (advice-add 'tabulated-list-revert :after #'diminish-buffer--tabulated-list-revert--advice-after)
-  (diminish-buffer--refresh-buffer-menu))
+  (diminish-buffer--refresh-buffer-menu)
+  (diminish-buffer-clean))
 
 (defun diminish-buffer--disable ()
   "Disable `diminish-buffer'."
