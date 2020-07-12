@@ -1,4 +1,4 @@
-;;; diminish-buffer.el --- Diminish (hide) buffers from buffer-menu.  -*- lexical-binding: t; -*-
+;;; diminish-buffer.el --- Diminish (hide) buffers from buffer-menu  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019  Shen, Jen-Chieh
 ;; Created date 2019-08-31 00:02:54
@@ -32,19 +32,16 @@
 
 ;;; Code:
 
-
 (defgroup diminish-buffer nil
   "Diminish (hide) buffers from buffer-menu."
   :prefix "diminish-buffer-"
   :group 'convenience
   :link '(url-link :tag "Repository" "https://github.com/jcs090218/diminish-buffer"))
 
-
 (defcustom diminish-buffer-list '("*helm")
   "List of buffer that you want to hide in the buffer."
   :type 'list
   :group 'diminish-buffer)
-
 
 (defun diminish-buffer--is-contain-list-string-regexp (in-list in-str)
   "Check if a string IN-STR contain in any string in the string list IN-LIST."
@@ -66,9 +63,7 @@
 (defun diminish-buffer--refresh-buffer-menu ()
   "Refresh buffer menu at time when enabled/disabled."
   (save-window-excursion
-    (let ((inhibit-message t)
-          (message-log-max nil))
-      (buffer-menu))
+    (let ((inhibit-message t) (message-log-max nil)) (buffer-menu))
     (bury-buffer)))
 
 (defun diminish-buffer--buffer-menu--advice-after (&rest _)
@@ -78,7 +73,6 @@
 (defun diminish-buffer--tabulated-list-revert--advice-after (&rest _)
   "Advice run after execute `tabulated-list-revert' command."
   (diminish-buffer-clean))
-
 
 (defun diminish-buffer--enable ()
   "Enable `diminish-buffer'."
@@ -98,10 +92,7 @@
   :global t
   :require 'diminish-buffer
   :group 'diminish-buffer
-  (if diminish-buffer-mode
-      (diminish-buffer--enable)
-    (diminish-buffer--disable)))
-
+  (if diminish-buffer-mode (diminish-buffer--enable) (diminish-buffer--disable)))
 
 (provide 'diminish-buffer)
 ;;; diminish-buffer.el ends here
