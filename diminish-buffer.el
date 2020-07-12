@@ -51,19 +51,21 @@
 (defun diminish-buffer-clean ()
   "Do the diminish action for `buffer-menu'."
   (interactive)
-  (when (string= (buffer-name) "*Buffer List*")
-    (save-excursion
-      (while (< (line-number-at-pos) (line-number-at-pos (point-max)))
-        (let ((buf-name (elt (tabulated-list-get-entry) 3)))
-          (if (and (stringp buf-name)
-                   (diminish-buffer--is-contain-list-string-regexp diminish-buffer-list buf-name))
-              (tabulated-list-delete-entry)
-            (forward-line 1)))))))
+  (when (get-buffer "*Buffer List*")
+    (with-current-buffer "*Buffer List*"
+      (save-excursion
+        (while (< (line-number-at-pos) (line-number-at-pos (point-max)))
+          (let ((buf-name (elt (tabulated-list-get-entry) 3)))
+            (if (and (stringp buf-name)
+                     (diminish-buffer--is-contain-list-string-regexp diminish-buffer-list buf-name))
+                (tabulated-list-delete-entry)
+              (forward-line 1))))))))
 
 (defun diminish-buffer--refresh-buffer-menu ()
   "Refresh buffer menu at time when enabled/disabled."
   (save-window-excursion
-    (let ((inhibit-message t) (message-log-max nil)) (buffer-menu))
+    (let ((inhibit-message t) (message-log-max nil))
+      (buffer-menu) (tabulated-list-revert))
     (bury-buffer)))
 
 (defun diminish-buffer--buffer-menu--advice-after (&rest _)
