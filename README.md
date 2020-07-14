@@ -14,7 +14,7 @@ Add the buffer name to list `diminish-buffer-list` that you want to diminish
 from buffer menu.
 
 ```el
-(setq diminish-buffer-list '("*helm"))
+(setq diminish-buffer-list '("[*]helm" "[*]Backtrace[*]"))
 ```
 
 Then enable it by calling `diminish-buffer-mode` like this.
