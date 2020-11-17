@@ -8,7 +8,7 @@
 ;; Keyword: diminish hide buffer menu
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "24.4"))
-;; URL: https://github.com/jcs090218/diminish-buffer
+;; URL: https://github.com/jcs-elpa/diminish-buffer
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -36,7 +36,7 @@
   "Diminish (hide) buffers from buffer-menu."
   :prefix "diminish-buffer-"
   :group 'convenience
-  :link '(url-link :tag "Repository" "https://github.com/jcs090218/diminish-buffer"))
+  :link '(url-link :tag "Repository" "https://github.com/jcs-elpa/diminish-buffer"))
 
 (defcustom diminish-buffer-list '("[*]helm")
   "List of buffer that you want to hide in the buffer."
