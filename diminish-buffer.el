@@ -43,24 +43,39 @@
   :type 'list
   :group 'diminish-buffer)
 
+;;
+;; (@* "Util" )
+;;
+
 (defun diminish-buffer--is-contain-list-string-regexp (in-list in-str)
   "Check if a string IN-STR contain in any string in the string list IN-LIST."
-  (cl-some #'(lambda (lb-sub-str) (string-match-p lb-sub-str in-str)) in-list))
+  (cl-some (lambda (lb-sub-str) (string-match-p lb-sub-str in-str)) in-list))
+
+;;
+;; (@* "Core" )
+;;
+
+(defmacro diminish-buffer-with-buffer-menu (&rest body)
+  "Safe execute BODY inside `buffer-menu'."
+  (declare (indent 0) (debug t))
+  `(when diminish-buffer-mode
+     (when (get-buffer "*Buffer List*")
+       (with-current-buffer "*Buffer List*"
+         (progn ,@body)))))
 
 ;;;###autoload
 (defun diminish-buffer-clean (&rest _)
   "Do the diminish action for `buffer-menu'."
   (interactive)
-  (when (get-buffer "*Buffer List*")
-    (with-current-buffer "*Buffer List*"
-      (save-excursion
-        (goto-char (point-min))
-        (while (< (line-number-at-pos) (line-number-at-pos (point-max)))
-          (let ((buf-name (elt (tabulated-list-get-entry) 3)))
-            (if (and (stringp buf-name)
-                     (diminish-buffer--is-contain-list-string-regexp diminish-buffer-list buf-name))
-                (tabulated-list-delete-entry)
-              (forward-line 1))))))))
+  (diminish-buffer-with-buffer-menu
+    (save-excursion
+      (goto-char (point-min))
+      (while (< (line-number-at-pos) (line-number-at-pos (point-max)))
+        (let ((buf-name (elt (tabulated-list-get-entry) 3)))
+          (if (and (stringp buf-name)
+                   (diminish-buffer--is-contain-list-string-regexp diminish-buffer-list buf-name))
+              (tabulated-list-delete-entry)
+            (forward-line 1)))))))
 
 (defun diminish-buffer--refresh-buffer-menu ()
   "Refresh buffer menu at time when enabled/disabled."
@@ -69,17 +84,21 @@
       (buffer-menu) (tabulated-list-revert))
     (bury-buffer)))
 
+;;
+;; (@* "Entry" )
+;;
+
 (defun diminish-buffer--enable ()
   "Enable `diminish-buffer'."
   (advice-add 'buffer-menu :after #'diminish-buffer-clean)
-  (advice-add 'tabulated-list-revert :after #'diminish-buffer-clean)
+  (advice-add 'tabulated-list-print :after #'diminish-buffer-clean)
   (diminish-buffer--refresh-buffer-menu)
   (diminish-buffer-clean))
 
 (defun diminish-buffer--disable ()
   "Disable `diminish-buffer'."
   (advice-remove 'buffer-menu #'diminish-buffer-clean)
-  (advice-remove 'tabulated-list-revert #'diminish-buffer-clean)
+  (advice-remove 'tabulated-list-print #'diminish-buffer-clean)
   (diminish-buffer--refresh-buffer-menu))
 
 ;;;###autoload
