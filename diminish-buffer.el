@@ -48,7 +48,7 @@
   (cl-some #'(lambda (lb-sub-str) (string-match-p lb-sub-str in-str)) in-list))
 
 ;;;###autoload
-(defun diminish-buffer-clean ()
+(defun diminish-buffer-clean (&rest _)
   "Do the diminish action for `buffer-menu'."
   (interactive)
   (when (get-buffer "*Buffer List*")
@@ -69,25 +69,17 @@
       (buffer-menu) (tabulated-list-revert))
     (bury-buffer)))
 
-(defun diminish-buffer--buffer-menu--advice-after (&rest _)
-  "Advice after execute `buffer-menu' command."
-  (diminish-buffer-clean))
-
-(defun diminish-buffer--tabulated-list-revert--advice-after (&rest _)
-  "Advice run after execute `tabulated-list-revert' command."
-  (diminish-buffer-clean))
-
 (defun diminish-buffer--enable ()
   "Enable `diminish-buffer'."
-  (advice-add 'buffer-menu :after #'diminish-buffer--buffer-menu--advice-after)
-  (advice-add 'tabulated-list-revert :after #'diminish-buffer--tabulated-list-revert--advice-after)
+  (advice-add 'buffer-menu :after #'diminish-buffer-clean)
+  (advice-add 'tabulated-list-revert :after #'diminish-buffer-clean)
   (diminish-buffer--refresh-buffer-menu)
   (diminish-buffer-clean))
 
 (defun diminish-buffer--disable ()
   "Disable `diminish-buffer'."
-  (advice-remove 'buffer-menu #'diminish-buffer--buffer-menu--advice-after)
-  (advice-remove 'tabulated-list-revert #'diminish-buffer--tabulated-list-revert--advice-after)
+  (advice-remove 'buffer-menu #'diminish-buffer-clean)
+  (advice-remove 'tabulated-list-revert #'diminish-buffer-clean)
   (diminish-buffer--refresh-buffer-menu))
 
 ;;;###autoload
