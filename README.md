@@ -16,7 +16,7 @@ from buffer menu.
 ```
 
 Or you can also diminish buffer by buffer mode by tweaking the variable
-`diminish-buffer-mode-list`. See the following code snippet,
+`diminish-buffer-mode-list`.
 
 ```el
 (setq diminish-buffer-mode-list '("Dired by name"))
