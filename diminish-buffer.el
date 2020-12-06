@@ -39,7 +39,12 @@
   :link '(url-link :tag "Repository" "https://github.com/jcs-elpa/diminish-buffer"))
 
 (defcustom diminish-buffer-list '("[*]helm")
-  "List of buffer that you want to hide in the buffer."
+  "List of buffer name that you want to hide in the `buffer-menu'."
+  :type 'list
+  :group 'diminish-buffer)
+
+(defcustom diminish-buffer-mode-list '()
+  "List of buffer mode that you want to hide in the `buffer-menu'."
   :type 'list
   :group 'diminish-buffer)
 
@@ -70,10 +75,13 @@
   (diminish-buffer-with-buffer-menu
     (save-excursion
       (goto-char (point-min))
-      (while (< (line-number-at-pos) (line-number-at-pos (point-max)))
-        (let ((buf-name (elt (tabulated-list-get-entry) 3)))
-          (if (and (stringp buf-name)
-                   (diminish-buffer--is-contain-list-string-regexp diminish-buffer-list buf-name))
+      (while (not (eobp))
+        (let ((buf-name (elt (tabulated-list-get-entry) 3))
+              (buf-mode (elt (tabulated-list-get-entry) 5)))
+          (if (or (and (stringp buf-name)
+                       (diminish-buffer--is-contain-list-string-regexp diminish-buffer-list buf-name))
+                  (and (stringp buf-mode)
+                       (diminish-buffer--is-contain-list-string-regexp diminish-buffer-mode-list buf-mode)))
               (tabulated-list-delete-entry)
             (forward-line 1)))))))
 
