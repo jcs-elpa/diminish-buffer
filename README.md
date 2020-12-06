@@ -3,10 +3,8 @@
 [![MELPA Stable](https://stable.melpa.org/packages/diminish-buffer-badge.svg)](https://stable.melpa.org/#/diminish-buffer)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-
 # diminish-buffer
 > Diminish (hide) buffers from buffer-menu.
-
 
 ## Usage
 
@@ -15,6 +13,13 @@ from buffer menu.
 
 ```el
 (setq diminish-buffer-list '("[*]helm" "[*]Backtrace[*]"))
+```
+
+Or you can also diminish buffer by buffer mode by tweaking the variable
+`diminish-buffer-mode-list`. See the following code snippet,
+
+```el
+(setq diminish-buffer-mode-list '("Dired by name"))
 ```
 
 Then enable it by calling `diminish-buffer-mode` like this.
@@ -39,7 +44,6 @@ Or, if you are using `use-package` to manage your plugin.
   (setq diminish-buffer-list '("*helm"))
   (diminish-buffer-mode 1))
 ```
-
 
 ## Contribution
 
