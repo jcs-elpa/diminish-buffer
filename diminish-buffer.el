@@ -57,6 +57,31 @@
   (cl-some (lambda (lb-sub-str) (string-match-p lb-sub-str in-str)) in-list))
 
 ;;
+;; (@* "Entry" )
+;;
+
+(defun diminish-buffer--enable ()
+  "Enable `diminish-buffer'."
+  (advice-add 'buffer-menu :after #'diminish-buffer-clean)
+  (advice-add 'tabulated-list-print :after #'diminish-buffer-clean)
+  (diminish-buffer--refresh-buffer-menu)
+  (diminish-buffer-clean))
+
+(defun diminish-buffer--disable ()
+  "Disable `diminish-buffer'."
+  (advice-remove 'buffer-menu #'diminish-buffer-clean)
+  (advice-remove 'tabulated-list-print #'diminish-buffer-clean)
+  (diminish-buffer--refresh-buffer-menu))
+
+;;;###autoload
+(define-minor-mode diminish-buffer-mode
+  "Minor mode 'diminish-buffer-mode'."
+  :global t
+  :require 'diminish-buffer
+  :group 'diminish-buffer
+  (if diminish-buffer-mode (diminish-buffer--enable) (diminish-buffer--disable)))
+
+;;
 ;; (@* "Core" )
 ;;
 
@@ -91,31 +116,6 @@
     (let ((inhibit-message t) (message-log-max nil))
       (buffer-menu) (tabulated-list-revert))
     (bury-buffer)))
-
-;;
-;; (@* "Entry" )
-;;
-
-(defun diminish-buffer--enable ()
-  "Enable `diminish-buffer'."
-  (advice-add 'buffer-menu :after #'diminish-buffer-clean)
-  (advice-add 'tabulated-list-print :after #'diminish-buffer-clean)
-  (diminish-buffer--refresh-buffer-menu)
-  (diminish-buffer-clean))
-
-(defun diminish-buffer--disable ()
-  "Disable `diminish-buffer'."
-  (advice-remove 'buffer-menu #'diminish-buffer-clean)
-  (advice-remove 'tabulated-list-print #'diminish-buffer-clean)
-  (diminish-buffer--refresh-buffer-menu))
-
-;;;###autoload
-(define-minor-mode diminish-buffer-mode
-  "Minor mode 'diminish-buffer-mode'."
-  :global t
-  :require 'diminish-buffer
-  :group 'diminish-buffer
-  (if diminish-buffer-mode (diminish-buffer--enable) (diminish-buffer--disable)))
 
 (provide 'diminish-buffer)
 ;;; diminish-buffer.el ends here
