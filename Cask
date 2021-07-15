@@ -1,3 +1,3 @@
 (source melpa)
 
-(package-file "company-unity.el")
+(package-file "diminish-buffer.el")
