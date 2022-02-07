@@ -32,8 +32,6 @@
 
 ;;; Code:
 
-(require 'cl-lib)
-
 (defgroup diminish-buffer nil
   "Diminish (hide) buffers from buffer-menu."
   :prefix "diminish-buffer-"
@@ -54,9 +52,9 @@
 ;; (@* "Util" )
 ;;
 
-(defun diminish-buffer--is-contain-list-string-regexp (in-list in-str)
-  "Check if a string IN-STR contain in any string in the string list IN-LIST."
-  (cl-some (lambda (lb-sub-str) (string-match-p lb-sub-str in-str)) in-list))
+(defun diminish-buffer--is-contain-list-string-regexp (elt list)
+  "Return non-nil if ELT is listed in LIST."
+  (when (stringp elt) (cl-some (lambda (elm) (string-match-p elm elt)) list)))
 
 ;;
 ;; (@* "Entry" )
@@ -92,8 +90,7 @@
   (declare (indent 0) (debug t))
   `(when diminish-buffer-mode
      (when (get-buffer "*Buffer List*")
-       (with-current-buffer "*Buffer List*"
-         (progn ,@body)))))
+       (with-current-buffer "*Buffer List*" ,@body))))
 
 ;;;###autoload
 (defun diminish-buffer-clean (&rest _)
@@ -105,17 +102,15 @@
       (while (not (eobp))
         (let ((buf-name (elt (tabulated-list-get-entry) 3))
               (buf-mode (elt (tabulated-list-get-entry) 5)))
-          (if (or (and (stringp buf-name)
-                       (diminish-buffer--is-contain-list-string-regexp diminish-buffer-list buf-name))
-                  (and (stringp buf-mode)
-                       (diminish-buffer--is-contain-list-string-regexp diminish-buffer-mode-list buf-mode)))
+          (if (or (diminish-buffer--is-contain-list-string-regexp buf-name diminish-buffer-list)
+                  (diminish-buffer--is-contain-list-string-regexp buf-mode diminish-buffer-mode-list))
               (tabulated-list-delete-entry)
             (forward-line 1)))))))
 
 (defun diminish-buffer--refresh-buffer-menu ()
   "Refresh buffer menu at time when enabled/disabled."
   (save-window-excursion
-    (let ((inhibit-message t) (message-log-max nil))
+    (let ((inhibit-message t) message-log-max)
       (buffer-menu) (tabulated-list-revert))
     (bury-buffer)))
 
