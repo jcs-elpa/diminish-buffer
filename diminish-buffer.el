@@ -32,6 +32,8 @@
 
 ;;; Code:
 
+(require 'cl-lib)
+
 (defgroup diminish-buffer nil
   "Diminish (hide) buffers from buffer-menu."
   :prefix "diminish-buffer-"
