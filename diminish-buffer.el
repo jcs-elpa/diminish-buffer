@@ -6,7 +6,7 @@
 ;; Author: Shen, Jen-Chieh <jcs090218@gmail.com>
 ;; Description: Diminish (hide) buffers from buffer-menu.
 ;; Keyword: diminish hide buffer menu
-;; Version: 0.1.1
+;; Version: 0.2.0
 ;; Package-Requires: ((emacs "24.4"))
 ;; URL: https://github.com/jcs-elpa/diminish-buffer
 
@@ -91,12 +91,13 @@
 ;;
 
 (defun diminish-buffer--filter (buffer)
-  "Filter out the buffer."
+  "Filter out the BUFFER."
   (or (diminish-buffer--contain-list-string-regex (buffer-name buffer) diminish-buffer-list)
       (diminish-buffer--contain-list-string-regex (with-current-buffer buffer major-mode) diminish-buffer-mode-list)))
 
 (defun diminish-buffer--refresh-list (fnc &rest args)
-  "Modified argument `buffer-list' before display the buffer menu."
+  "Modified argument `buffer-list' before display the buffer menu.
+Override FNC and ARGS."
   (let ((buffer-list (nth 0 args)))
     (unless buffer-list
       (setq buffer-list (buffer-list (if Buffer-menu-use-frame-buffer-list
