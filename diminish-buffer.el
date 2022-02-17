@@ -38,12 +38,19 @@
   :group 'convenience
   :link '(url-link :tag "Repository" "https://github.com/jcs-elpa/diminish-buffer"))
 
-(defcustom diminish-buffer-list '("[*]helm")
+(defcustom diminish-buffer-list
+  (append
+   '("[*]Buffer List[*]"
+     "[*]Minibuf-[01][*]" "[*]Echo Area [01][*]"
+     "[*]code-converting-work[*]" "[*]code-conversion-work[*]"
+     "[*]tip[*]")
+   '("[*]diff-hl[*]" "[*]helm"))
   "List of buffer name that you want to hide in the `buffer-menu'."
   :type 'list
   :group 'diminish-buffer)
 
-(defcustom diminish-buffer-mode-list '()
+(defcustom diminish-buffer-mode-list
+  '()
   "List of buffer mode that you want to hide in the `buffer-menu'."
   :type 'list
   :group 'diminish-buffer)
@@ -52,9 +59,10 @@
 ;; (@* "Util" )
 ;;
 
-(defun diminish-buffer--is-contain-list-string-regexp (elt list)
+(defun diminish-buffer--contain-list-string-regex (elt list)
   "Return non-nil if ELT is listed in LIST."
-  (when (stringp elt) (cl-some (lambda (elm) (string-match-p elm elt)) list)))
+  (let ((elt (format "%s" elt)))
+    (cl-some (lambda (elm) (string-match-p elm elt)) list)))
 
 ;;
 ;; (@* "Entry" )
@@ -62,15 +70,12 @@
 
 (defun diminish-buffer--enable ()
   "Enable `diminish-buffer'."
-  (advice-add 'buffer-menu :after #'diminish-buffer-clean)
-  (advice-add 'tabulated-list-print :after #'diminish-buffer-clean)
-  (diminish-buffer--refresh-buffer-menu)
-  (diminish-buffer-clean))
+  (advice-add 'list-buffers--refresh :around #'diminish-buffer--refresh-list)
+  (diminish-buffer--refresh-buffer-menu))
 
 (defun diminish-buffer--disable ()
   "Disable `diminish-buffer'."
-  (advice-remove 'buffer-menu #'diminish-buffer-clean)
-  (advice-remove 'tabulated-list-print #'diminish-buffer-clean)
+  (advice-remove 'list-buffers--refresh #'diminish-buffer--refresh-list)
   (diminish-buffer--refresh-buffer-menu))
 
 ;;;###autoload
@@ -85,27 +90,20 @@
 ;; (@* "Core" )
 ;;
 
-(defmacro diminish-buffer-with-buffer-menu (&rest body)
-  "Safe execute BODY inside `buffer-menu'."
-  (declare (indent 0) (debug t))
-  `(when diminish-buffer-mode
-     (when (get-buffer "*Buffer List*")
-       (with-current-buffer "*Buffer List*" ,@body))))
+(defun diminish-buffer--filter (buffer)
+  "Filter out the buffer."
+  (or (diminish-buffer--contain-list-string-regex (buffer-name buffer) diminish-buffer-list)
+      (diminish-buffer--contain-list-string-regex (with-current-buffer buffer major-mode) diminish-buffer-mode-list)))
 
-;;;###autoload
-(defun diminish-buffer-clean (&rest _)
-  "Do the diminish action for `buffer-menu'."
-  (interactive)
-  (diminish-buffer-with-buffer-menu
-    (save-excursion
-      (goto-char (point-min))
-      (while (not (eobp))
-        (let ((buf-name (elt (tabulated-list-get-entry) 3))
-              (buf-mode (elt (tabulated-list-get-entry) 5)))
-          (if (or (diminish-buffer--is-contain-list-string-regexp buf-name diminish-buffer-list)
-                  (diminish-buffer--is-contain-list-string-regexp buf-mode diminish-buffer-mode-list))
-              (tabulated-list-delete-entry)
-            (forward-line 1)))))))
+(defun diminish-buffer--refresh-list (fnc &rest args)
+  "Modified argument `buffer-list' before display the buffer menu."
+  (let ((buffer-list (nth 0 args)))
+    (unless buffer-list
+      (setq buffer-list (buffer-list (if Buffer-menu-use-frame-buffer-list
+                                         (selected-frame)))  ; see function `list-buffers--refresh'
+            buffer-list (cl-remove-if #'diminish-buffer--filter buffer-list))  ; filter
+      (pop args) (push buffer-list args)))  ; update
+  (apply fnc args))
 
 (defun diminish-buffer--refresh-buffer-menu ()
   "Refresh buffer menu at time when enabled/disabled."
