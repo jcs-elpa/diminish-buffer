@@ -107,15 +107,29 @@
              (not (eq buffer buffer-menu-buffer))
              (or file show-non-file))))))
 
+;;;###autoload
+(defun diminish-buffer-default-list (&optional buffer-list)
+  "Return the default buffer list generated from `buffer-menu'."
+  (unless buffer-list
+    (setq buffer-list (buffer-list (if Buffer-menu-use-frame-buffer-list
+                                       (selected-frame)))
+          buffer-list (cl-remove-if-not #'diminish-buffer--default-filter buffer-list)))
+  buffer-list)
+
+;;;###autoload
+(defun diminish-buffer-diminished-list (&optional buffer-list)
+  "Return the default buffer list generated from `buffer-menu'."
+  (unless buffer-list
+    (setq buffer-list (diminish-buffer-default-list buffer-list)
+          buffer-list (cl-remove-if #'diminish-buffer--filter buffer-list)))  ; filter
+  buffer-list)
+
 (defun diminish-buffer--refresh-list (fnc &rest args)
   "Modified argument `buffer-list' before display the buffer menu.
 Override FNC and ARGS."
   (let ((buffer-list (nth 0 args)))
     (unless buffer-list
-      (setq buffer-list (buffer-list (if Buffer-menu-use-frame-buffer-list
-                                         (selected-frame)))  ; see function `list-buffers--refresh'
-            buffer-list (cl-remove-if-not #'diminish-buffer--default-filter buffer-list)
-            buffer-list (cl-remove-if #'diminish-buffer--filter buffer-list))  ; filter
+      (setq buffer-list (diminish-buffer-diminished-list buffer-list))
       (pop args) (push buffer-list args)))  ; update
   (apply fnc args))
 
