@@ -109,7 +109,7 @@
 
 ;;;###autoload
 (defun diminish-buffer-default-list (&optional buffer-list)
-  "Return the default buffer list generated from `buffer-menu'."
+  "Return the default BUFFER-LIST generated from `buffer-menu'."
   (unless buffer-list
     (setq buffer-list (buffer-list (if Buffer-menu-use-frame-buffer-list
                                        (selected-frame)))
@@ -118,7 +118,7 @@
 
 ;;;###autoload
 (defun diminish-buffer-diminished-list (&optional buffer-list)
-  "Return the default buffer list generated from `buffer-menu'."
+  "Return diminished BUFFER-LIST."
   (unless buffer-list
     (setq buffer-list (diminish-buffer-default-list buffer-list)
           buffer-list (cl-remove-if #'diminish-buffer--filter buffer-list)))  ; filter
