@@ -52,7 +52,7 @@
   :type 'list
   :group 'diminish-buffer)
 
-(defconst diminish-buffer-name "*Buffer List*"
+(defconst diminish-buffer-menu-name "*Buffer List*"
   "Buffer name for *Buffer List*.")
 
 ;;
@@ -140,8 +140,8 @@ Override FNC and ARGS."
   "Refresh buffer menu at time when enabled/disabled."
   (save-window-excursion
     (let ((inhibit-message t) message-log-max)
-      (when (get-buffer diminish-buffer-name)
-        (with-current-buffer diminish-buffer-name (tabulated-list-revert))))
+      (when (get-buffer diminish-buffer-menu-name)
+        (with-current-buffer diminish-buffer-menu-name (tabulated-list-revert))))
     (bury-buffer)))
 
 (provide 'diminish-buffer)
