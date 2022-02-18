@@ -41,12 +41,7 @@
   :link '(url-link :tag "Repository" "https://github.com/jcs-elpa/diminish-buffer"))
 
 (defcustom diminish-buffer-list
-  (append
-   '("[*]Buffer List[*]"
-     "[*]Minibuf-[01][*]" "[*]Echo Area [01][*]"
-     "[*]code-converting-work[*]" "[*]code-conversion-work[*]"
-     "[*]tip[*]")
-   '("[*]diff-hl[*]" "[*]helm"))
+  '()
   "List of buffer name that you want to hide in the `buffer-menu'."
   :type 'list
   :group 'diminish-buffer)
@@ -94,8 +89,23 @@
 
 (defun diminish-buffer--filter (buffer)
   "Filter out the BUFFER."
-  (or (diminish-buffer--contain-list-string-regex (buffer-name buffer) diminish-buffer-list)
-      (diminish-buffer--contain-list-string-regex (with-current-buffer buffer major-mode) diminish-buffer-mode-list)))
+  (with-current-buffer buffer
+    (or (diminish-buffer--contain-list-string-regex (buffer-name) diminish-buffer-list)
+        (diminish-buffer--contain-list-string-regex major-mode diminish-buffer-mode-list))))
+
+;; XXX This is the default filter from Emacs itself; leave this feature as is it.
+(defun diminish-buffer--default-filter (buffer)
+  "Copy it from function `list-buffers--refresh'."
+  (let ((buffer-menu-buffer (current-buffer))
+        (show-non-file (not Buffer-menu-files-only)))
+    (with-current-buffer buffer
+      (let* ((name (buffer-name))
+             (file buffer-file-name))
+        (and (buffer-live-p buffer)
+             (or (not (string= (substring name 0 1) " "))
+                 file)
+             (not (eq buffer buffer-menu-buffer))
+             (or file show-non-file))))))
 
 (defun diminish-buffer--refresh-list (fnc &rest args)
   "Modified argument `buffer-list' before display the buffer menu.
@@ -104,6 +114,7 @@ Override FNC and ARGS."
     (unless buffer-list
       (setq buffer-list (buffer-list (if Buffer-menu-use-frame-buffer-list
                                          (selected-frame)))  ; see function `list-buffers--refresh'
+            buffer-list (cl-remove-if-not #'diminish-buffer--default-filter buffer-list)
             buffer-list (cl-remove-if #'diminish-buffer--filter buffer-list))  ; filter
       (pop args) (push buffer-list args)))  ; update
   (apply fnc args))
