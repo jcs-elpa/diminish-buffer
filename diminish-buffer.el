@@ -1,6 +1,6 @@
 ;;; diminish-buffer.el --- Diminish (hide) buffers from buffer-menu  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019  Shen, Jen-Chieh
+;; Copyright (C) 2019-2022  Shen, Jen-Chieh
 ;; Created date 2019-08-31 00:02:54
 
 ;; Author: Shen, Jen-Chieh <jcs090218@gmail.com>
@@ -51,6 +51,9 @@
   "List of buffer mode that you want to hide in the `buffer-menu'."
   :type 'list
   :group 'diminish-buffer)
+
+(defconst diminish-buffer-name "*Buffer List*"
+  "Buffer name for *Buffer List*.")
 
 ;;
 ;; (@* "Util" )
@@ -137,7 +140,8 @@ Override FNC and ARGS."
   "Refresh buffer menu at time when enabled/disabled."
   (save-window-excursion
     (let ((inhibit-message t) message-log-max)
-      (buffer-menu) (tabulated-list-revert))
+      (when (get-buffer diminish-buffer-name)
+        (with-current-buffer diminish-buffer-name (tabulated-list-revert))))
     (bury-buffer)))
 
 (provide 'diminish-buffer)
