@@ -4,11 +4,10 @@
 ;; Created date 2019-08-31 00:02:54
 
 ;; Author: Shen, Jen-Chieh <jcs090218@gmail.com>
-;; Description: Diminish (hide) buffers from buffer-menu.
-;; Keyword: diminish hide buffer menu
+;; URL: https://github.com/jcs-elpa/diminish-buffer
 ;; Version: 0.2.0
 ;; Package-Requires: ((emacs "24.4"))
-;; URL: https://github.com/jcs-elpa/diminish-buffer
+;; Keywords: diminish hide buffer menu
 
 ;; This file is NOT part of GNU Emacs.
 
