@@ -3,7 +3,7 @@
          "Diminish (hide) buffers from buffer-menu")
 
 (website-url "https://github.com/jcs-elpa/diminish-buffer")
-(keywords "diminish" "hide" "buffer" "menu")
+(keywords "convenience" "diminish" "hide" "buffer" "menu")
 
 (package-file "diminish-buffer.el")
 
