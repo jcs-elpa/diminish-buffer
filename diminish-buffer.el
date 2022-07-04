@@ -7,7 +7,7 @@
 ;; URL: https://github.com/jcs-elpa/diminish-buffer
 ;; Version: 0.2.0
 ;; Package-Requires: ((emacs "24.4"))
-;; Keywords: diminish hide buffer menu
+;; Keywords: convenience diminish hide buffer menu
 
 ;; This file is NOT part of GNU Emacs.
 
