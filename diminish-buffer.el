@@ -34,7 +34,7 @@
 (require 'cl-lib)
 
 (defgroup diminish-buffer nil
-  "Diminish (hide) buffers from buffer-menu."
+  "Diminish (hide) buffers from `buffer-menu'."
   :prefix "diminish-buffer-"
   :group 'convenience
   :link '(url-link :tag "Repository" "https://github.com/jcs-elpa/diminish-buffer"))
@@ -49,6 +49,12 @@
   '()
   "List of buffer mode that you want to hide in the `buffer-menu'."
   :type 'list
+  :group 'diminish-buffer)
+
+(defcustom diminish-buffer-refresh-instead-revert
+  t
+  "Refresh buffer instead revert."
+  :type 'boolean
   :group 'diminish-buffer)
 
 (defconst diminish-buffer-menu-name "*Buffer List*"
@@ -79,7 +85,7 @@
 
 ;;;###autoload
 (define-minor-mode diminish-buffer-mode
-  "Minor mode 'diminish-buffer-mode'."
+  "Minor mode `diminish-buffer-mode'."
   :global t
   :require 'diminish-buffer
   :group 'diminish-buffer
@@ -140,7 +146,9 @@ Override FNC and ARGS."
   (save-window-excursion
     (let ((inhibit-message t) message-log-max)
       (when (get-buffer diminish-buffer-menu-name)
-        (with-current-buffer diminish-buffer-menu-name (tabulated-list-revert))))
+        (with-current-buffer diminish-buffer-menu-name
+          (if diminish-buffer-refresh-instead-revert (buffer-menu)
+            (tabulated-list-revert)))))
     (bury-buffer)))
 
 (provide 'diminish-buffer)
