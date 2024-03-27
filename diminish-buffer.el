@@ -39,20 +39,17 @@
   :group 'convenience
   :link '(url-link :tag "Repository" "https://github.com/jcs-elpa/diminish-buffer"))
 
-(defcustom diminish-buffer-list
-  '()
+(defcustom diminish-buffer-list nil
   "List of buffer name that you want to hide in the `buffer-menu'."
   :type 'list
   :group 'diminish-buffer)
 
-(defcustom diminish-buffer-mode-list
-  '()
+(defcustom diminish-buffer-mode-list nil
   "List of buffer mode that you want to hide in the `buffer-menu'."
   :type 'list
   :group 'diminish-buffer)
 
-(defcustom diminish-buffer-refresh-instead-revert
-  t
+(defcustom diminish-buffer-refresh-instead-revert t
   "Refresh buffer instead revert."
   :type 'boolean
   :group 'diminish-buffer)
@@ -98,8 +95,8 @@
 (defun diminish-buffer--filter (buffer)
   "Filter out the BUFFER."
   (with-current-buffer buffer
-    (or (diminish-buffer--contain-list-string-regex (buffer-name) diminish-buffer-list)
-        (diminish-buffer--contain-list-string-regex major-mode diminish-buffer-mode-list))))
+    (or (diminish-buffer--contain-list-string-regex major-mode diminish-buffer-mode-list)
+        (diminish-buffer--contain-list-string-regex (buffer-name) diminish-buffer-list))))
 
 ;; XXX This is the default filter from Emacs itself; leave this feature as is it.
 (defun diminish-buffer--default-filter (buffer)
