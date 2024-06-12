@@ -6,7 +6,7 @@
 ;; Author: Shen, Jen-Chieh <jcs090218@gmail.com>
 ;; URL: https://github.com/jcs-elpa/diminish-buffer
 ;; Version: 0.2.0
-;; Package-Requires: ((emacs "24.4") (ht "2.0"))
+;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience diminish hide buffer menu
 
 ;; This file is NOT part of GNU Emacs.
@@ -33,8 +33,6 @@
 
 (require 'cl-lib)
 
-(require 'ht)
-
 (defgroup diminish-buffer nil
   "Diminish (hide) buffers from `buffer-menu'."
   :prefix "diminish-buffer-"
@@ -59,8 +57,8 @@
 (defconst diminish-buffer-menu-name "*Buffer List*"
   "Buffer name for *Buffer List*.")
 
-(defvar diminish-buffer--cache (make-hash-table)
-  "Filter cache.")
+(defvar diminish-buffer--cache nil
+  "Cache to recording filter.")
 
 ;;
 ;; (@* "Util" )
@@ -101,12 +99,14 @@
   "Filter out the BUFFER."
   (with-current-buffer buffer
     (let* ((name (buffer-name))
-           (answer (or (ht-get diminish-buffer--cache name)
-                       (diminish-buffer--contain-list-string-regex major-mode
-                                                                   diminish-buffer-mode-list)
-                       (diminish-buffer--contain-list-string-regex name
-                                                                   diminish-buffer-list))))
-      (ht-set diminish-buffer--cache name answer)
+           (answer (cond (diminish-buffer--cache
+                          (equal diminish-buffer--cache t))
+                         (t
+                          (or (diminish-buffer--contain-list-string-regex
+                               major-mode diminish-buffer-mode-list)
+                              (diminish-buffer--contain-list-string-regex
+                               name diminish-buffer-list))))))
+      (setq diminish-buffer--cache (if answer t 'no))
       answer)))
 
 ;; XXX This is the default filter from Emacs itself; leave this feature as is it.
