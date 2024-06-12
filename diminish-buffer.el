@@ -57,7 +57,7 @@
 (defconst diminish-buffer-menu-name "*Buffer List*"
   "Buffer name for *Buffer List*.")
 
-(defvar diminish-buffer--cache nil
+(defvar-local diminish-buffer--cache nil
   "Cache to recording filter.")
 
 ;;
