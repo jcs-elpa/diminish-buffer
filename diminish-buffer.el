@@ -95,6 +95,13 @@
 ;; (@* "Core" )
 ;;
 
+(defun diminish-buffer-clear-cache ()
+  "Clear the cache."
+  (interactive)
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (kill-local-variable 'diminish-buffer--cache))))
+
 (defun diminish-buffer--filter (buffer)
   "Filter out the BUFFER."
   (with-current-buffer buffer
