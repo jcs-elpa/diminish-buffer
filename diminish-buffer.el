@@ -81,7 +81,8 @@
 (defun diminish-buffer--disable ()
   "Disable `diminish-buffer'."
   (advice-remove 'list-buffers--refresh #'diminish-buffer--refresh-list)
-  (diminish-buffer--refresh-buffer-menu))
+  (diminish-buffer--refresh-buffer-menu)
+  (diminish-buffer-clear-cache))
 
 ;;;###autoload
 (define-minor-mode diminish-buffer-mode
