@@ -1,6 +1,6 @@
 ;;; diminish-buffer.el --- Diminish (hide) buffers from buffer-menu  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019-2024  Shen, Jen-Chieh
+;; Copyright (C) 2019-2025  Shen, Jen-Chieh
 ;; Created date 2019-08-31 00:02:54
 
 ;; Author: Shen, Jen-Chieh <jcs090218@gmail.com>
