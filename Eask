@@ -1,3 +1,5 @@
+;; -*- mode: eask; lexical-binding: t -*-
+
 (package "diminish-buffer"
          "0.2.0"
          "Diminish (hide) buffers from buffer-menu")
